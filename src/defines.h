@@ -17,8 +17,8 @@
 #define AUXA_PIN      3    // Switch
 #define DIR_PIN      A7  
 
-#define DIPA_COM_PIN  2   // Sellect DIP A
-
+#define DIPA_COM_PIN  2    // Select DIP A
+#define DIPB_COM_PIN  17   // Select DIP B
 
 
 

@@ -280,6 +280,7 @@ uint16_t pot0 = 0;
 uint16_t potwert = 0;
 
 uint16_t resetcounter = 0;
+uint16_t ackcounter = 0;
 uint16_t radiocounter = 0;
 uint8_t radiostatus = 0;
 
@@ -790,7 +791,10 @@ void recvData()
       // ********************
   
 
-      radio.writeAckPayload(1, &ackData, sizeof(ackData));
+      if(radio.writeAckPayload(1, &ackData, sizeof(ackData)))
+      {
+         ackcounter++;
+      }
 
       if(radiocounter % 4 == 0)
       {
@@ -1018,8 +1022,10 @@ void loop()
       {
          loopcounter1 = 0;
       }
-      //u8g2.setCursor(42,30);
-      //u8g2.print(loopcounter1);
+      u8g2.setCursor(0,16);
+      u8g2.print(data.A);
+      // u8g2.setCursor(30,16);
+      //u8g2.print(ackcounter);
 
       u8g2.setCursor(12,30);
 

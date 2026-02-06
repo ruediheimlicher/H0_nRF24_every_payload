@@ -8,7 +8,6 @@
 #include <util/delay.h>
 struct Signal 
 {
-   
    byte task;
    byte A;  
    byte B;
