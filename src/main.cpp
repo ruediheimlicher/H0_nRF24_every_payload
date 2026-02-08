@@ -967,7 +967,7 @@ void loop()
       }
       
    }   // zeitintervall > 500
-   
+   /*
    // Tastatur
    if (tastaturstatus & (1<<TASTE_OK) && Taste) // Menu ansteuern
    {
@@ -1004,7 +1004,7 @@ void loop()
       
    }// if TASTE_OK
    // end Tastatur
-   
+   */
    if(loopcounter >= BLINKRATE)
    {
 
