@@ -63,13 +63,7 @@ RF24 radio(CE_PIN, CSN_PIN);
 uint8_t DIPA_Array[4] = {DIPA_0_PIN,DIPA_1_PIN,DIPA_2_PIN,DIPA_3_PIN};
 
 
-// links
-#define PITCH_PIN     A3 // PSB2: A6
-#define YAW_PIN       A2 // PCB2: A3
 
-// rechts
-#define ROLL_PIN      A1
-#define THROTTLE_PIN  A0  
 
 #define TASTATUR_PIN A7
 #define TASTE_OFF  0
@@ -933,7 +927,7 @@ void loop()
       if (sekundencounter%2)
       {
          //digitalWrite(MS_PIN,LOW);
-         throttlesekunden = throttlecounter >> 8;
+         //throttlesekunden = throttlecounter >> 8;
          blinkstatus = 1;
          if(throttlesekunden > 250)
          {
