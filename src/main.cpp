@@ -782,7 +782,7 @@ void recvData()
       // ********************
       // ACK Payload ********
       // ********************
-  
+      
 
       if(radio.writeAckPayload(1, &ackData, sizeof(ackData)))
       {
@@ -1008,6 +1008,7 @@ void loop()
       {
             
          recvData();
+         
          unsigned long now = millis();
          if ( now - lastRecvTime > 1000 ) 
          {
@@ -1148,7 +1149,7 @@ void loop()
      potwert=analogRead(adcpinarray[0]);
       potwertarray[0] = potwert >> 2;
       ackData[0] = potwertarray[0];
-      //ackData[1] = 0;
+      ackData[1] = 0;
       uint8_t del = 2;
       digitalWrite(DIPA_COM_PIN,HIGH); // DIP A enable
       //_delay_us(del);
@@ -1175,6 +1176,7 @@ void loop()
          ackData[1] &= ~(1<<(0));
       }
       //_delay_us(del);
+      
       if(digitalRead(DIR_PIN)) // DIR
       {
          ackData[1] |= (1<<(1));
@@ -1184,7 +1186,7 @@ void loop()
          ackData[1] &= ~(1<<(1));
       }
       
-
+      ackData[1] &= ~(1<<(1));
       //_delay_us(del);
       digitalWrite(DIPA_COM_PIN,LOW); // DIPA enable END
       
