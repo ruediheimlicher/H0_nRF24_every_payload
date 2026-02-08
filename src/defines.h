@@ -9,16 +9,19 @@
 #ifndef DEFINES_h
 #define DEFINES_h
 
+#define OSZIA_PIN    A6
+#define LED_PIN      A7
+
 #define DIPA_0_PIN    5
 #define DIPA_1_PIN    6
 #define DIPA_2_PIN    7
 #define DIPA_3_PIN    8
 
 #define AUXA_PIN      3    // Switch
-#define DIR_PIN      A7  
+#define DIR_PIN      4  
 
-#define DIPA_COM_PIN  2    // Select DIP A
-#define DIPB_COM_PIN  17   // Select DIP B
+#define DIPA_COM_PIN  17    // Select DIP A
+#define DIPB_COM_PIN  2   // Select DIP B
 
 
 

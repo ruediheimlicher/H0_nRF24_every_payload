@@ -20,7 +20,6 @@
 #include "MS5611.h"
 
 const uint64_t pipeOut = 0xABCDABCD71LL;         // NOTE: The address in the Transmitter and Receiver code must be the same "0xABCDABCD71LL" | Verici ve Alıcı kodundaki adres aynı olmalıdır
-//const uint64_t pipeOut = 0xAAAAAAAA71LL;  
 extern "C" 
 
 
@@ -818,6 +817,9 @@ void setup()
   
    delay(50);
    
+   pinMode(OSZIA_PIN,OUTPUT);
+
+   pinMode(LED_PIN,OUTPUT);
    
    analogReference(EXTERNAL);
    
@@ -829,9 +831,15 @@ void setup()
    pinMode(DIPA_2_PIN,INPUT);
    pinMode(DIPA_3_PIN,INPUT);
    pinMode(AUXA_PIN,INPUT);
+   pinMode(DIR_PIN,INPUT);
+
+
 
    pinMode(DIPA_COM_PIN,OUTPUT);
    digitalWrite(DIPA_COM_PIN,LOW);
+
+   pinMode(DIPB_COM_PIN,OUTPUT);
+   digitalWrite(DIPB_COM_PIN,LOW);
 
  
 
@@ -1022,13 +1030,8 @@ void loop()
       {
          loopcounter1 = 0;
       }
-      u8g2.setCursor(0,16);
-      u8g2.print(data.A);
-      // u8g2.setCursor(30,16);
-      //u8g2.print(ackcounter);
-
+       
       u8g2.setCursor(12,30);
-
       u8g2.print(potwertarray[0]);
       u8g2.setCursor(64,30);
       u8g2.print(potwertarray[1]);
@@ -1037,6 +1040,9 @@ void loop()
       u8g2.setCursor(0,45);
       u8g2.print("A ");
       u8g2.print(ackData[1]);
+      u8g2.setCursor(48,45);
+      u8g2.print("B ");
+      u8g2.print(ackData[3]);
 
       u8g2.setCursor(12,60);
       u8g2.print("E");
@@ -1137,10 +1143,10 @@ void loop()
       //digitalWrite(BUZZPIN,!(digitalRead(BUZZPIN)));
       
    }
-   if(paketcounter > 10) // 20ms
+   if(paketcounter > 20) // 20ms
    {
       paketcounter = 0;
-      
+      digitalWrite(OSZIA_PIN, !digitalRead(OSZIA_PIN));
 
       // LOK A
       // pot lesen
@@ -1148,9 +1154,10 @@ void loop()
      potwert=analogRead(adcpinarray[0]);
       potwertarray[0] = potwert >> 2;
       ackData[0] = potwertarray[0];
-      ackData[1] = 0;
-      digitalWrite(DIPA_COM_PIN,HIGH); // DIP enable
-      delay(1);
+      //ackData[1] = 0;
+      uint8_t del = 2;
+      digitalWrite(DIPA_COM_PIN,HIGH); // DIP A enable
+      //_delay_us(del);
       for(uint8_t i = 0;i<4;i++)
       {
          if(digitalRead(DIPA_Array[i]))
@@ -1161,9 +1168,10 @@ void loop()
          {
             ackData[1] &= ~(1<<(4+i));
          }
-      delay(1);
+      //_delay_us(del);
       }
 
+      
       if(digitalRead(AUXA_PIN)) // AUXA
       {
          ackData[1] |= (1<<(0));
@@ -1172,7 +1180,7 @@ void loop()
       {
          ackData[1] &= ~(1<<(0));
       }
-
+      //_delay_us(del);
       if(digitalRead(DIR_PIN)) // DIR
       {
          ackData[1] |= (1<<(1));
@@ -1181,10 +1189,52 @@ void loop()
       {
          ackData[1] &= ~(1<<(1));
       }
+      
 
+      //_delay_us(del);
+      digitalWrite(DIPA_COM_PIN,LOW); // DIPA enable END
+      
+      // LOK B
+      // pot lesen
+     // POT A1
+      potwert=analogRead(adcpinarray[1]);
+      potwertarray[1] = potwert >> 2;
+      ackData[2] = potwertarray[1]; // speed
+      ackData[3] = 0; // Code
+      digitalWrite(DIPB_COM_PIN,HIGH); // DIP B enable START
+      //delay(1);
+      for(uint8_t i = 0;i<4;i++)
+      {
+         if(digitalRead(DIPA_Array[i]))
+         {
+            ackData[3] |= (1<<(4+i));
+         }
+         else
+         {
+            ackData[3] &= ~(1<<(4+i));
+         }
+      //delay(1);
+      }
 
+      if(digitalRead(AUXA_PIN)) // AUXA
+      {
+         ackData[3] |= (1<<(0));
+      }
+      else
+      {
+         ackData[3] &= ~(1<<(0));
+      }
 
-      digitalWrite(DIPA_COM_PIN,LOW); // DIP enable
+      if(digitalRead(DIR_PIN)) // DIR
+      {
+         ackData[3] |= (1<<(1));
+      }
+      else
+      {
+         ackData[3] &= ~(1<<(1));
+      }
+      ackData[3] &= ~(1<<(1));
+      digitalWrite(DIPB_COM_PIN,LOW); // DIP enable END
 
 
       
