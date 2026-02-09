@@ -848,7 +848,7 @@ void setup()
 
    //pinMode(BUZZPIN,OUTPUT);
    
-   pinMode(LOOPLED,OUTPUT);
+   //pinMode(LOOPLED,OUTPUT);
    
    pinMode(BATT_PIN,INPUT);
 
@@ -1070,7 +1070,7 @@ void loop()
      
       blinkcounter++;
       impulscounter+=16;
-      digitalWrite(LOOPLED, ! digitalRead(LOOPLED));
+     // digitalWrite(LOOPLED, ! digitalRead(LOOPLED));
       float faktor = 0.2;
       //analogWrite(BUZZPIN,127);
       
@@ -1146,13 +1146,14 @@ void loop()
       // LOK A
       // pot lesen
      // POT A0
-     potwert=analogRead(adcpinarray[0]);
+      potwert=analogRead(adcpinarray[0]);
       potwertarray[0] = potwert >> 2;
       ackData[0] = potwertarray[0];
       ackData[1] = 0;
       uint8_t del = 2;
-      digitalWrite(DIPA_COM_PIN,HIGH); // DIP A enable
-      //_delay_us(del);
+
+      // DIP A enable
+      digitalWrite(DIPA_COM_PIN,HIGH); 
       for(uint8_t i = 0;i<4;i++)
       {
          if(digitalRead(DIPA_Array[i]))
@@ -1163,11 +1164,10 @@ void loop()
          {
             ackData[1] &= ~(1<<(4+i));
          }
-      //_delay_us(del);
       }
 
       
-      if(digitalRead(AUXA_PIN)) // AUXA
+      if(digitalRead(AUXA_PIN)) // AUXA,  active LO
       {
          ackData[1] |= (1<<(0));
       }
@@ -1175,9 +1175,8 @@ void loop()
       {
          ackData[1] &= ~(1<<(0));
       }
-      //_delay_us(del);
       
-      if(digitalRead(DIR_PIN)) // DIR
+      if(digitalRead(DIR_PIN)) // DIR, active LO
       {
          ackData[1] |= (1<<(1));
       }
@@ -1186,8 +1185,6 @@ void loop()
          ackData[1] &= ~(1<<(1));
       }
       
-      ackData[1] &= ~(1<<(1));
-      //_delay_us(del);
       digitalWrite(DIPA_COM_PIN,LOW); // DIPA enable END
       
       // LOK B
@@ -1198,7 +1195,6 @@ void loop()
       ackData[2] = potwertarray[1]; // speed
       ackData[3] = 0; // Code
       digitalWrite(DIPB_COM_PIN,HIGH); // DIP B enable START
-      //delay(1);
       for(uint8_t i = 0;i<4;i++)
       {
          if(digitalRead(DIPA_Array[i]))
@@ -1209,7 +1205,6 @@ void loop()
          {
             ackData[3] &= ~(1<<(4+i));
          }
-      //delay(1);
       }
 
       if(digitalRead(AUXA_PIN)) // AUXA
@@ -1223,67 +1218,19 @@ void loop()
 
       if(digitalRead(DIR_PIN)) // DIR
       {
-         ackData[3] |= (1<<(1));
+         ackData[3] |= (1<<(1));          
       }
       else
-      {
+      {       
          ackData[3] &= ~(1<<(1));
       }
-      ackData[3] &= ~(1<<(1));
       digitalWrite(DIPB_COM_PIN,LOW); // DIP enable END
 
-
-      
-      
-      
       if(RAMPETEST)
       {
          data.B = rampe;       
       }
       
-       
-      
-      
-      /*
-         digitalWrite(MS_PIN,HIGH);
-         if (radio.write(&data, sizeof(data)))
-         {
-            radiocounter++; 
-            
-            // ********************
-            // ACK Payload ********
-            if (radio.isAckPayloadAvailable()) 
-            {
-               radio.read(&ackData, sizeof(ackData));
-               
-
-               
-                //Serial.print("ACK erhalten: ");
-                //Serial.print("\t");
-                Serial.print(ackData[0]);
-                Serial.print("\t");
-                Serial.print(ackData[1]);
-                Serial.print("\t");
-                Serial.print(ackData[2]);
-                Serial.print("\t");
-                Serial.print(ackData[3]);
-                Serial.print(" \n");
-                
-            } 
-            else 
-            {
-               //Serial.println(F("Keine ACK-Daten erhalten"));
-            }
-            // ********************
-            // ********************
-         }
-         else
-         {
-            //Serial.println("radio error\n");
-            digitalWrite(BUZZPIN,!(digitalRead(BUZZPIN)));
-            errcounter++;
-         }
-      */
         
    } // if paketcounter
 }
